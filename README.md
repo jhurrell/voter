@@ -1,37 +1,90 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## TODO
 
-## Getting Started
+[ ] Create a Voting Session
+[ ] Add Ballots to Voting Session
+[ ]
 
-First, run the development server:
+## Roles
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Creator:
+Responsible for creating and managing a Voting Session
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Participant:
+Can observe a Voting Session and optioanlly perticipate.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Model/Schema
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+**Voting Session**
 
-## Learn More
+This is the parent object that represents a Voting Session. Voting Ballots can be added to a Voting Session.
 
-To learn more about Next.js, take a look at the following resources:
+| Property     | Type          | Required | Notes                                 |
+| ------------ | ------------- | -------- | ------------------------------------- |
+| Id           | UUID          | Yes      |                                       |
+| Label        | string        | Yes      |                                       |
+| Description  | string        | No       |                                       |
+| Options      | string[]      | Yes      | can select from list and/or customize |
+| Ballots      | Ballot[]      |          |                                       |
+| Participants | Participant[] |          |                                       |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Ballot**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+| Property    | Type     | Required | Notes                                                 |
+| ----------- | -------- | -------- | ----------------------------------------------------- |
+| Id          | UUID     | Yes      |                                                       |
+| Label       | string   | Yes      |                                                       |
+| Description | string   | No       |                                                       |
+| Ordinal     | number   | Yes      | can change order of Ballots                           |
+| Options     | string[] | No       | defaults to those defined on Session but can override |
+| Rounds      | Round[]  |          |                                                       |
+| Final       | string   |          |                                                       |
 
-## Deploy on Vercel
+**Round**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Property  | Type   | Required | Notes |
+| --------- | ------ | -------- | ----- |
+| Id        | UUID   | Yes      |       |
+| Number    | number | Yes      |       |
+| StartDate | date   | Yes      |       |
+| EndDate   | date   | No       |       |
+| Final     | string |          |       |
+| Votes     | Vote[] |          |       |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-# voter
+**Vote**
+
+| Property | Type   | Required | Notes                      |
+| -------- | ------ | -------- | -------------------------- |
+| Id       | UUID   | Yes      |                            |
+| From     | string | Yes      | Participant Name           |
+| Vote     | string | Yes      | must be one of the Options |
+
+**Participant**
+
+| Property | Type    | Required | Notes                                   |
+| -------- | ------- | -------- | --------------------------------------- |
+| Id       | UUID    | Yes      |                                         |
+| Name     | string  | Yes      |                                         |
+| CanVote  | boolean | Yes      | false by default, admin can set to true |
+| CanAdmin | boolean | Yes      | true for creator, false otherwise       |
+
+**Options**
+
+| Property | Type     | Required | Notes |
+| -------- | -------- | -------- | ----- |
+| Id       | UUID     | Yes      |       |
+| Name     | string   | Yes      |       |
+| Values   | string[] | Yes      |       |
+
+Examples:
+
+- Yes/No: ["Yes", "No"]
+- Yes/No/Maybe: ["Yes", "No", "Maybe"]
+- True/False: ["True", "False"]
+- True/False/Unknown: ["True", "False", "Unknown"]
+- Small/Medium/Large/Extra Large: [Small, Medium, Large, Extra Large]
+- Agile Fibonacci [0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89]
+- Agile Story Points [0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100]
+
+You can also define custom options:
+
+- Lunch ["Burger", "Pizza", "Seafood"]
