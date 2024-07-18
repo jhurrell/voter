@@ -88,3 +88,7 @@ Examples:
 You can also define custom options:
 
 - Lunch ["Burger", "Pizza", "Seafood"]
+
+# Libraries
+
+https://github.com/sadmann7/sortable?tab=readme-ov-file
